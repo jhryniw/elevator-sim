@@ -1,0 +1,8 @@
+.git/**
+.vscode/**
+
+# Bazel ignore
+bazel-bin
+bazel-elevator-sim
+bazel-out
+bazel-testlogs
