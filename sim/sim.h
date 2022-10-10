@@ -86,7 +86,9 @@ void Print(const State& state) {
     for (const auto& elevator : state.elevators) {
         ss << elevator.getApproximateFloor() << ' ';
     }
-    std::cout << ss.str() << std::endl;
+    std::cout << '\r' << ss.str();
+    std::cout.flush();
+    // std::cout << ss.str() << std::endl;
 }
 
 // void Display(const State& state) {

@@ -13,6 +13,8 @@ struct MoveElevatorCommand {
     int targetFloor;
 };
 
+std::string EncodePacket(const MoveElevatorCommand& cmd);
+
 using Packet = std::variant<MoveElevatorCommand>;
 
 std::optional<Packet> DecodePacket(const std::string& msg);

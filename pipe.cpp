@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <unistd.h>
 
+#include <iostream>
+
 namespace elevator_sim {
 
 Pipe::Pipe(int src, int dst)
@@ -28,7 +30,7 @@ int Pipe::wfd() const {
 }
 
 pollfd Pipe::pollfd() const {
-    return { .fd = rfd() };
+    return { .fd = rfd(), .events = POLLIN, .revents = 0 };
 }
 
 int Pipe::dst() const {

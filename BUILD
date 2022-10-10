@@ -12,3 +12,11 @@ cc_binary(
         "//:comms"
     ]
 )
+
+cc_binary(
+    name = "shell",
+    srcs = ["shell.cpp"],
+    deps = [
+        "//:comms"
+    ]
+)

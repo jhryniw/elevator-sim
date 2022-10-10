@@ -58,6 +58,7 @@ void ProcessIncoming(Pipe* pipe, State* state) {
     while (true) {
         auto maybeRequest = Poll(pipe);
         if (maybeRequest) {
+            std::cout << "request recieved" << std::endl;
             auto maybePacket = DecodePacket(*maybeRequest);
             if (maybePacket) {
                 ProcessPacket(*maybePacket, state);
@@ -79,7 +80,7 @@ int main() {
         /*numElevators=*/2
     );
 
-    for (int t = 0; t < 300; t++) {
+    while (true) {
         ProcessIncoming(&requestPipe, &state);
         Tick(&state);
         Print(state);
