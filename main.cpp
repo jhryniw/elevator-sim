@@ -31,7 +31,17 @@ State MakeBuilding(int numFloors, int numElevators) {
         floors[i].number = i;
     }
 
-    std::vector<Elevator> elevators(numElevators);
+    ElevatorSpec spec = {
+        .maxSpeed = 300,
+        .maxFloor = numFloors - 1,
+    };
+
+    std::vector<Elevator> elevators;
+    elevators.reserve(numElevators);
+    for (size_t i = 0; i < numElevators; i++) {
+        elevators.emplace_back(Elevator(spec));
+    }
+
     return {
         .elevators = std::move(elevators),
         .floors = std::move(floors),

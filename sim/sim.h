@@ -15,6 +15,7 @@ struct Passenger {
 
 struct ElevatorSpec {
     int maxSpeed = 300; // millifloors / sec
+    int maxFloor = 0;
 };
 
 // struct StateCallbacks {
@@ -24,13 +25,15 @@ struct ElevatorSpec {
 class Elevator {
 public:
 
-    Elevator() : _spec() {}
+    explicit Elevator(const ElevatorSpec& spec) : _spec(spec) {}
     // void board(Passenger newPassenger);
 
     void setTargetFloor(int targetFloor) {
-        _targetMilliFloor = targetFloor * 1000;
+        if (targetFloor >= 0 && targetFloor <= _spec.maxFloor) {
+            _targetMilliFloor = targetFloor * 1000;
+        }
     }
-    
+
     bool atFloor(int floor) const {
         return _milliFloor == floor * 1000;
     }
@@ -48,10 +51,15 @@ public:
             _milliFloor = std::min(
                 _milliFloor + _spec.maxSpeed,
                 _targetMilliFloor);
+            _milliFloor = std::min(
+                _milliFloor,
+                _spec.maxFloor * 1000
+            );
         } else if (_milliFloor > _targetMilliFloor) {
             _milliFloor = std::max(
                 _milliFloor - _spec.maxSpeed,
                 _targetMilliFloor);
+            _milliFloor = std::max(_milliFloor, 0);
         }
     }
 
