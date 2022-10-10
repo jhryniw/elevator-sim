@@ -63,6 +63,7 @@ void AcceptPassenger(const PassengerCommand& cmd, State* state) {
             .destination = cmd.destinationFloor,
         };
         state->floors[cmd.sourceFloor].passengers.push_back(p);
+        state->ok = false;
     }
 };
 
@@ -81,7 +82,6 @@ void ProcessIncoming(Pipe* pipe, State* state) {
     while (true) {
         auto maybeRequest = Poll(pipe);
         if (maybeRequest) {
-            std::cout << "request recieved" << std::endl;
             auto maybePacket = DecodePacket(*maybeRequest);
             if (maybePacket) {
                 ProcessPacket(*maybePacket, state);
@@ -113,5 +113,6 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
+    std::cout << t << std::endl;
     return 0;
 }

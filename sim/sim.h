@@ -1,7 +1,11 @@
+#pragma once
+
 #include <sstream>
 #include <cmath>
 #include <iostream>
 #include <vector>
+
+namespace elevator_sim {
 
 struct TickContext {
     int time;
@@ -46,6 +50,10 @@ public:
         return std::round(_milliFloor / 1000);
     }
 
+    int numPassengers() const {
+        return _passengers.size();
+    }
+
     void tick() {
         if (_milliFloor < _targetMilliFloor) {
             _milliFloor = std::min(
@@ -79,27 +87,13 @@ struct Floor {
 };
 
 struct State {
+    bool ok = true;
     int currentTime = 0;
     std::vector<Elevator> elevators;
     std::vector<Floor> floors;
 };
 
-void Tick(State* state) {
-    for (auto& elevator : state->elevators) {
-        elevator.tick();
-    }
-}
+void Tick(State* state);
+void Print(const State& state);
 
-void Print(const State& state) {
-    std::stringstream ss;
-    for (const auto& elevator : state.elevators) {
-        ss << elevator.getApproximateFloor() << ' ';
-    }
-    std::cout << '\r' << ss.str();
-    std::cout.flush();
-    // std::cout << ss.str() << std::endl;
-}
-
-// void Display(const State& state) {
-
-// }
+}  // namespace elevator_sim
