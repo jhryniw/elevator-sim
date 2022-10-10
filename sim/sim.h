@@ -79,6 +79,7 @@ struct Floor {
 };
 
 struct State {
+    int currentTime = 0;
     std::vector<Elevator> elevators;
     std::vector<Floor> floors;
 };

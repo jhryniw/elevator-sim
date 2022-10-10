@@ -11,6 +11,13 @@ MoveElevatorCommand ParseMoveElevatorCommand(std::istream& iss) {
     return cmd;
 } 
 
+PassengerCommand ParsePassengerCommand(std::istream& iss) {
+    PassengerCommand cmd;
+    iss >> cmd.sourceFloor;
+    iss >> cmd.destinationFloor;
+    return cmd;
+}
+
 int main() {
     elevator_sim::Pipe commandPipe(/*src=*/1, /*dst=*/0);
 
@@ -27,6 +34,9 @@ int main() {
             break;
         } else if (firstToken == "e" || firstToken == "elevator") {
             auto cmd = ParseMoveElevatorCommand(iss);
+            commandPipe.write(EncodePacket(cmd));
+        } else if (firstToken == "p" || firstToken == "passenger") {
+            auto cmd = ParsePassengerCommand(iss);
             commandPipe.write(EncodePacket(cmd));
         } else {
             std::cout << "unrecogonized command" << std::endl;

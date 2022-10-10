@@ -6,6 +6,7 @@
 
 enum PacketType : int {
     MOVE_ELEVATOR_COMMAND = 0,
+    PASSENGER_COMMAND = 1,
 };
 
 struct MoveElevatorCommand {
@@ -13,8 +14,14 @@ struct MoveElevatorCommand {
     int targetFloor;
 };
 
-std::string EncodePacket(const MoveElevatorCommand& cmd);
+struct PassengerCommand {
+    int sourceFloor;
+    int destinationFloor;
+};
 
-using Packet = std::variant<MoveElevatorCommand>;
+std::string EncodePacket(const MoveElevatorCommand& cmd);
+std::string EncodePacket(const PassengerCommand& cmd);
+
+using Packet = std::variant<MoveElevatorCommand, PassengerCommand>;
 
 std::optional<Packet> DecodePacket(const std::string& msg);

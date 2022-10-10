@@ -49,10 +49,22 @@ State MakeBuilding(int numFloors, int numElevators) {
 }
 
 void MoveElevator(const MoveElevatorCommand& cmd, State* state) {
-    if (cmd.elevatorId < state->elevators.size()) {
+    if (cmd.elevatorId >= 0 && cmd.elevatorId < state->elevators.size()) {
         state->elevators[cmd.elevatorId].setTargetFloor(cmd.targetFloor);
     }
 }
+
+void AcceptPassenger(const PassengerCommand& cmd, State* state) {
+    if (cmd.sourceFloor >= 0 && cmd.sourceFloor <= state->floors.size() &&
+        cmd.destinationFloor >= 0 && cmd.destinationFloor <= state->floors.size() &&
+        cmd.sourceFloor != cmd.destinationFloor) {
+        Passenger p = {
+            .startTime = state->currentTime,
+            .destination = cmd.destinationFloor,
+        };
+        state->floors[cmd.sourceFloor].passengers.push_back(p);
+    }
+};
 
 // helper type for the visitor
 template<class... Ts> struct Visitor : Ts... { using Ts::operator()...; };
@@ -61,6 +73,7 @@ template<class... Ts> Visitor(Ts...) -> Visitor<Ts...>;
 void ProcessPacket(const Packet& packet, State* state) {
     std::visit(Visitor{
         [state](const MoveElevatorCommand& cmd) { MoveElevator(cmd, state); },
+        [state](const PassengerCommand& cmd) { AcceptPassenger(cmd, state); },
     }, packet);
 }
 
@@ -90,10 +103,13 @@ int main() {
         /*numElevators=*/2
     );
 
+    int t = 0;
     while (true) {
+        state.currentTime = t;
         ProcessIncoming(&requestPipe, &state);
         Tick(&state);
         Print(state);
+        t++;
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 

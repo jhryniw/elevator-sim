@@ -10,6 +10,14 @@ std::string EncodePacket(const MoveElevatorCommand& cmd) {
     return ss.str();
 }
 
+std::string EncodePacket(const PassengerCommand& cmd) {
+    std::ostringstream ss;
+    ss << PacketType::PASSENGER_COMMAND << ' ';
+    ss << cmd.sourceFloor << ' ';
+    ss << cmd.destinationFloor;
+    return ss.str();
+}
+
 std::optional<Packet> DecodePacket(const std::string& msg) {
     std::istringstream iss(msg);
 
@@ -18,10 +26,15 @@ std::optional<Packet> DecodePacket(const std::string& msg) {
 
     switch (type) {
         case PacketType::MOVE_ELEVATOR_COMMAND:
-            MoveElevatorCommand cmd;
-            iss >> cmd.elevatorId;
-            iss >> cmd.targetFloor;
-            return cmd;
+            MoveElevatorCommand ecmd;
+            iss >> ecmd.elevatorId;
+            iss >> ecmd.targetFloor;
+            return ecmd;
+        case PacketType::PASSENGER_COMMAND:
+            PassengerCommand pcmd;
+            iss >> pcmd.sourceFloor;
+            iss >> pcmd.destinationFloor;
+            return pcmd;
     }
 
     return std::nullopt;
