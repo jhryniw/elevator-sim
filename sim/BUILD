@@ -1,7 +1,7 @@
 cc_library(
     name = "sim",
     hdrs = [
-        "Simulator.h",
+        "sim.h",
     ],
     visibility = ["//visibility:public"],
 )

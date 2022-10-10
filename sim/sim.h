@@ -9,6 +9,7 @@ struct TickContext {
 };
 
 struct Passenger {
+    int startTime;
     int destination;
 };
 
